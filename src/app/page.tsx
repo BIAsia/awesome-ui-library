@@ -81,6 +81,48 @@ const projects = [
     desc: "Playful poster with red typography, draggable pink shapes, and SVG animations.",
     image: "/references/exhibition-poster.jpeg",
   },
+  {
+    href: "/grid-overstimulated",
+    title: "Over-Stimulated",
+    subtitle: "Grid · Creative Agency",
+    desc: "Staggered project card grid with editorial typography and hover reveals.",
+    image: "/references/grid-overstimulated.jpeg",
+  },
+  {
+    href: "/grid-rossmason",
+    title: "Ross Mason",
+    subtitle: "Grid · 3D Portfolio",
+    desc: "Numbered client work grid with massive mixed-weight typography.",
+    image: "/references/grid-rossmason.jpeg",
+  },
+  {
+    href: "/grid-schneeberger",
+    title: "Lukas Schneeberger",
+    subtitle: "Grid · Artist Collage",
+    desc: "Scattered draggable photographs with organic overlap and moody gradients.",
+    image: "/references/grid-schneeberger.jpeg",
+  },
+  {
+    href: "/grid-menil",
+    title: "The Menil Collection",
+    subtitle: "Grid · Museum",
+    desc: "Clean horizontal exhibition grid with institutional serif typography.",
+    image: "/references/grid-menil.jpeg",
+  },
+  {
+    href: "/grid-bookclub",
+    title: "Noname's Book Club",
+    subtitle: "Grid · Bookstore",
+    desc: "Bold book grid with neon yellow accents and featured card expansion.",
+    image: "/references/grid-bookclub.jpeg",
+  },
+  {
+    href: "/grid-biber",
+    title: "Biber Architects",
+    subtitle: "Grid · Architecture",
+    desc: "Categorized thumbnail grid with Swiss design hierarchy and clean sections.",
+    image: "/references/grid-biber.jpeg",
+  },
 ];
 
 export default function Home() {
