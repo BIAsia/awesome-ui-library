@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { usePhysicsDrag } from "@/hooks/usePhysicsDrag";
 
 const folders = [
   { label: "пресеты\nlightroom", angle: -60 },
@@ -16,12 +17,14 @@ const folders = [
 function PinkFolder({
   size = 80,
   hovered = false,
+  isDragging = false,
 }: {
   size?: number;
   hovered?: boolean;
+  isDragging?: boolean;
 }) {
-  const scale = hovered ? 1.15 : 1;
-  const rotate = hovered ? -5 : 0;
+  const scale = isDragging ? 1.2 : hovered ? 1.15 : 1;
+  const rotate = isDragging ? -8 : hovered ? -5 : 0;
   return (
     <svg
       width={size}
@@ -30,10 +33,13 @@ function PinkFolder({
       fill="none"
       style={{
         transform: `scale(${scale}) rotate(${rotate}deg)`,
-        transition: "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        filter: hovered
-          ? "drop-shadow(0 12px 24px rgba(255,150,200,0.4))"
-          : "drop-shadow(0 4px 8px rgba(255,150,200,0.2))",
+        transition: isDragging ? "none" : "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        filter:
+          isDragging
+            ? "drop-shadow(0 16px 32px rgba(255,150,200,0.5))"
+            : hovered
+              ? "drop-shadow(0 12px 24px rgba(255,150,200,0.4))"
+              : "drop-shadow(0 4px 8px rgba(255,150,200,0.2))",
       }}
     >
       {/* Back flap */}
@@ -46,6 +52,63 @@ function PinkFolder({
       {/* Tab */}
       <rect x="2" y="28" width="116" height="8" rx="4" fill="#FFD4EC" />
     </svg>
+  );
+}
+
+function DraggableFolder({
+  folder,
+  idx,
+  initialX,
+  initialY,
+  hoveredIdx,
+  setHoveredIdx,
+}: {
+  folder: (typeof folders)[0];
+  idx: number;
+  initialX: number;
+  initialY: number;
+  hoveredIdx: number | null;
+  setHoveredIdx: (idx: number | null) => void;
+}) {
+  const {
+    x,
+    y,
+    isDragging,
+    zIndex,
+    rotation,
+    handlers: { onPointerDown },
+  } = usePhysicsDrag(initialX, initialY);
+
+  return (
+    <div
+      onPointerDown={onPointerDown}
+      className="absolute flex flex-col items-center gap-2 touch-none"
+      style={{
+        left: `calc(50% + ${x}px - 50px)`,
+        top: `calc(50% + ${y}px - 40px)`,
+        transform: `rotate(${rotation}deg)`,
+        zIndex,
+        cursor: isDragging ? "grabbing" : "grab",
+        transition: isDragging ? "none" : "all 0.3s ease-out",
+      }}
+      onMouseEnter={() => !isDragging && setHoveredIdx(idx)}
+      onMouseLeave={() => !isDragging && setHoveredIdx(null)}
+    >
+      <PinkFolder
+        size={90}
+        hovered={hoveredIdx === idx}
+        isDragging={isDragging}
+      />
+      <span
+        className="text-[13px] text-gray-600 text-center leading-tight whitespace-pre-line transition-colors duration-300 pointer-events-none"
+        style={{
+          color: hoveredIdx === idx ? "#e91e8c" : "#666",
+          fontWeight: hoveredIdx === idx ? 600 : 400,
+        }}
+      >
+        {folder.label}
+      </span>
+    </div>
   );
 }
 
@@ -93,38 +156,29 @@ export default function PinkFoldersPage() {
           const angleRad = (folder.angle * Math.PI) / 180;
           const parallaxX = mousePos.x * 15;
           const parallaxY = mousePos.y * 15;
-          const x = Math.cos(angleRad) * radius + parallaxX * (idx % 2 === 0 ? 1 : -1);
-          const y = Math.sin(angleRad) * radius * 0.7 + parallaxY * (idx % 2 === 0 ? -1 : 1);
+          const x =
+            Math.cos(angleRad) * radius +
+            parallaxX * (idx % 2 === 0 ? 1 : -1);
+          const y =
+            Math.sin(angleRad) * radius * 0.7 +
+            parallaxY * (idx % 2 === 0 ? -1 : 1);
 
           return (
-            <div
+            <DraggableFolder
               key={idx}
-              className="absolute flex flex-col items-center gap-2 cursor-pointer"
-              style={{
-                left: `calc(50% + ${x}px - 50px)`,
-                top: `calc(50% + ${y}px - 40px)`,
-                transition: "all 0.3s ease-out",
-              }}
-              onMouseEnter={() => setHoveredIdx(idx)}
-              onMouseLeave={() => setHoveredIdx(null)}
-            >
-              <PinkFolder size={90} hovered={hoveredIdx === idx} />
-              <span
-                className="text-[13px] text-gray-600 text-center leading-tight whitespace-pre-line transition-colors duration-300"
-                style={{
-                  color: hoveredIdx === idx ? "#e91e8c" : "#666",
-                  fontWeight: hoveredIdx === idx ? 600 : 400,
-                }}
-              >
-                {folder.label}
-              </span>
-            </div>
+              folder={folder}
+              idx={idx}
+              initialX={x}
+              initialY={y}
+              hoveredIdx={hoveredIdx}
+              setHoveredIdx={setHoveredIdx}
+            />
           );
         })}
 
         {/* Center text */}
         <div
-          className="relative z-10 text-center select-none"
+          className="relative z-10 text-center select-none pointer-events-none"
           style={{
             transform: `translate(${mousePos.x * -8}px, ${mousePos.y * -8}px)`,
             transition: "transform 0.2s ease-out",
