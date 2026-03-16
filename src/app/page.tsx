@@ -66,6 +66,72 @@ export default function Home() {
               Colorful pastel folders with peeking items and staggered entrance animations.
             </p>
           </Link>
+          <Link
+            href="/category-specimen"
+            className="block p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-left"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Category Specimen — Editorial TOC
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Print-style table of contents with 6 columns, draggable items, and stationery illustrations.
+            </p>
+          </Link>
+          <Link
+            href="/gaijin"
+            className="block p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-left"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Gaijin — Japanese Travel Zine
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Double-page spread with massive typography and draggable travel memorabilia stickers.
+            </p>
+          </Link>
+          <Link
+            href="/magazine-index"
+            className="block p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-left"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Magazine Index — Scattered Articles
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Editorial contents page with mixed typography, draggable thumbnails, and category tags.
+            </p>
+          </Link>
+          <Link
+            href="/homegoods"
+            className="block p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-left"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Homegoods — Marquee Typography
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Luxury brand hero with auto-scrolling serif text and draggable floating products.
+            </p>
+          </Link>
+          <Link
+            href="/bakery"
+            className="block p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-left"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Bakery — Breakfast Promo
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Editorial food promo with mixed typography and draggable inline food stickers.
+            </p>
+          </Link>
+          <Link
+            href="/exhibition-poster"
+            className="block p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-left"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Exhibition Poster — Comic Artists
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Playful poster with red typography, draggable pink shapes, and SVG stroke animations.
+            </p>
+          </Link>
         </div>
       </div>
     </main>
