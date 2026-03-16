@@ -87,7 +87,19 @@ export default function Home() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Preload all images on mount
+  useEffect(() => {
+    projects.forEach((project, idx) => {
+      const img = new window.Image();
+      img.onload = () => {
+        setLoadedImages((prev) => new Set(prev).add(idx));
+      };
+      img.src = project.image;
+    });
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -109,12 +121,14 @@ export default function Home() {
     timerRef.current = setTimeout(() => setHoveredIdx(null), 200);
   };
 
+  const isCurrentLoaded = hoveredIdx !== null && loadedImages.has(hoveredIdx);
+
   return (
     <main className="min-h-screen bg-[#fafafa] relative overflow-hidden">
       {/* Floating preview image */}
       {hoveredIdx !== null && (
         <div
-          className="fixed pointer-events-none z-50 transition-opacity duration-200"
+          className="fixed pointer-events-none z-50"
           style={{
             left: mousePos.x + 24,
             top: mousePos.y - 100,
@@ -122,15 +136,27 @@ export default function Home() {
             transform: previewVisible
               ? "scale(1) rotate(2deg)"
               : "scale(0.8) rotate(-3deg)",
-            transition: "opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            transition:
+              "opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}
         >
-          <div className="w-[320px] h-[220px] rounded-xl overflow-hidden shadow-2xl border border-gray-200/50 bg-white">
-            <img
-              src={projects[hoveredIdx].image}
-              alt={projects[hoveredIdx].title}
-              className="w-full h-full object-cover"
-            />
+          <div className="w-[320px] h-[220px] rounded-xl overflow-hidden shadow-2xl border border-gray-200/50 bg-white relative">
+            {/* Skeleton placeholder */}
+            {!isCurrentLoaded && (
+              <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+            )}
+            {/* Prerendered images — all mounted, only active one visible */}
+            {projects.map((project, idx) => (
+              <img
+                key={project.href}
+                src={project.image}
+                alt={project.title}
+                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-150"
+                style={{
+                  opacity: hoveredIdx === idx && isCurrentLoaded ? 1 : 0,
+                }}
+              />
+            ))}
           </div>
         </div>
       )}
